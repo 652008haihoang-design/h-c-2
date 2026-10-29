@@ -1,0 +1,652 @@
+# h-c-2
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Học Tiếng Việt Lớp 1 Trang 34 - Bé Ngọc Bích Xinh Gái</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Fredoka', 'Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        brandPink: '#FF5E7E',
+                        brandYellow: '#FFC048',
+                        brandPurple: '#8854D0',
+                        brandGreen: '#2ED573',
+                        brandBlue: '#1E90FF',
+                        brandOrange: '#FF7F50',
+                    },
+                    boxShadow: {
+                        'cartoon': '0px 6px 0px 0px rgba(0, 0, 0, 0.18)',
+                        'cartoon-lg': '0px 8px 0px 0px rgba(0, 0, 0, 0.22)',
+                        'cartoon-sm': '0px 3px 0px 0px rgba(0, 0, 0, 0.15)',
+                    },
+                    animation: {
+                        'bounce-fun': 'bounceFun 1.4s infinite',
+                        'wiggle': 'wiggle 0.7s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 1.5s infinite',
+                    },
+                    keyframes: {
+                        bounceFun: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-7px)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { filter: 'drop-shadow(0 0 8px rgba(255, 94, 126, 0.6))' },
+                            '50%': { filter: 'drop-shadow(0 0 16px rgba(255, 192, 72, 0.9))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
+            background: #FFF0F3;
+            background-image: radial-gradient(#FFB6C1 1.5px, transparent 1.5px), radial-gradient(#FFB6C1 1.5px, #FFF0F3 1.5px);
+            background-size: 28px 28px;
+            background-position: 0 0, 14px 14px;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .btn-cartoon {
+            transition: all 0.12s ease-in-out;
+        }
+        .btn-cartoon:active {
+            transform: translateY(4px) scale(0.97);
+            box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.15) !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20 flex flex-col items-center">
+
+    <!-- Parent Lock Overlay Guard Modal -->
+    <div id="parent-lock-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 border-4 border-brandPurple shadow-cartoon-lg text-center animate-wiggle">
+            <div class="w-16 h-16 bg-purple-100 border-3 border-brandPurple rounded-full flex items-center justify-center text-3xl mx-auto mb-3">
+                🔒
+            </div>
+            <h3 class="text-xl font-black text-brandPurple mb-1">Xác Nhận Phụ Huynh</h3>
+            <p class="text-xs font-semibold text-gray-600 mb-4">Nhập mật khẩu phụ huynh để thoát khỏi bài học của bé Ngọc Bích:</p>
+            
+            <input type="password" id="lock-pass-input" placeholder="Nhập mật khẩu..." maxlength="7"
+                class="w-full text-center text-2xl font-black tracking-widest py-3 border-3 border-purple-300 rounded-2xl mb-3 focus:outline-none focus:border-brandPurple bg-purple-50">
+            
+            <div id="lock-error-msg" class="text-xs font-bold text-red-500 min-h-[1.25rem] mb-2"></div>
+
+            <div class="flex gap-2">
+                <button onclick="closeParentLockModal()" class="btn-cartoon flex-1 bg-gray-200 text-gray-700 font-extrabold py-3 rounded-2xl shadow-cartoon-sm">
+                    Quay Lại Học
+                </button>
+                <button onclick="verifyParentPassword()" class="btn-cartoon flex-1 bg-brandPurple text-white font-extrabold py-3 rounded-2xl shadow-cartoon-sm">
+                    Mở Khóa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile-Optimized Header -->
+    <header class="w-full max-w-md px-3 pt-3 sticky top-0 z-30">
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl p-3 border-4 border-brandPink shadow-cartoon flex items-center justify-between">
+            
+            <!-- Mascot & Personal Greeting -->
+            <div class="flex items-center gap-2" onclick="speakText('Chào Ngọc Bích xinh gái! Cùng học bài 34 dờ đờ nhé!')">
+                <div class="relative">
+                    <div class="w-12 h-12 bg-pink-100 border-2 border-brandPink rounded-full flex items-center justify-center text-2xl shadow-inner animate-wiggle">
+                        👸
+                    </div>
+                    <span class="absolute -bottom-1 -right-1 text-xs">✨</span>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-brandPink leading-tight flex items-center gap-1">
+                        Ngọc Bích <span class="text-[10px] bg-pink-200 text-pink-700 font-extrabold px-1.5 py-0.5 rounded-full">Xinh Gái</span>
+                    </h1>
+                    <p class="text-[11px] font-bold text-purple-700">Tiếng Việt 1 • Trang 34 (d - đ)</p>
+                </div>
+            </div>
+
+            <!-- Score & Parent Lock Button -->
+            <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 bg-amber-100 border-2 border-amber-300 px-2.5 py-1 rounded-2xl">
+                    <i class="fa-solid fa-star text-xl text-yellow-400 animate-bounce-fun"></i>
+                    <span id="star-count" class="text-xl font-black text-amber-700">0</span>
+                </div>
+                <button onclick="openParentLockModal()" class="w-9 h-9 bg-purple-100 border-2 border-purple-300 rounded-2xl flex items-center justify-center text-purple-700 font-bold active:scale-95 shadow-cartoon-sm">
+                    🔒
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="w-full max-w-md px-3 mt-3 z-20">
+        <div class="bg-white rounded-2xl p-1.5 border-3 border-pink-200 shadow-cartoon flex justify-between gap-1">
+            <button id="tab-learn-btn" onclick="switchTab('learn')" 
+                class="btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 bg-brandPink text-white shadow-cartoon-sm">
+                <i class="fa-solid fa-book-open text-base"></i>
+                <span>Học Bài 34</span>
+            </button>
+            <button id="tab-quiz-btn" onclick="switchTab('quiz')" 
+                class="btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 text-gray-600">
+                <i class="fa-solid fa-gamepad text-base text-amber-500"></i>
+                <span>Luyện Tập</span>
+            </button>
+            <button id="tab-test-btn" onclick="switchTab('test')" 
+                class="btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 text-gray-600">
+                <i class="fa-solid fa-award text-base text-purple-500"></i>
+                <span>Kiểm Tra</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Mobile Content Area -->
+    <main class="w-full max-w-md px-3 mt-3 flex-grow">
+
+        <!-- TAB 1: HỌC BÀI TRANG 34 (AM d - đ & TỪ ỨNG DỤNG) -->
+        <section id="tab-learn" class="space-y-4">
+            
+            <!-- Phần 1: Âm Trọng Tâm d - đ -->
+            <div class="bg-white rounded-3xl p-4 border-4 border-purple-300 shadow-cartoon">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-brandPurple text-white text-xs font-black px-2.5 py-1 rounded-lg">BÀI 34</span>
+                    <h2 class="text-base font-bold text-gray-800">Âm d (dờ) & Âm đ (đờ)</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Âm d -->
+                    <div onclick="speakText('Âm dờ - Chữ d')" class="btn-cartoon bg-pink-50 hover:bg-pink-100 border-3 border-pink-300 rounded-2xl p-3 text-center cursor-pointer shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-6xl font-black text-brandPink my-1">d</span>
+                        <span class="text-xs font-extrabold text-pink-700 bg-pink-200 px-3 py-0.5 rounded-full">Âm d (dờ)</span>
+                    </div>
+
+                    <!-- Âm đ -->
+                    <div onclick="speakText('Âm đờ - Chữ đ')" class="btn-cartoon bg-blue-50 hover:bg-blue-100 border-3 border-blue-300 rounded-2xl p-3 text-center cursor-pointer shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-6xl font-black text-brandBlue my-1">đ</span>
+                        <span class="text-xs font-extrabold text-blue-700 bg-blue-200 px-3 py-0.5 rounded-full">Âm đ (đờ)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 2: Từ Ứng Dụng Trang 34 -->
+            <div class="bg-white rounded-3xl p-4 border-4 border-pink-200 shadow-cartoon">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-brandPink text-white text-xs font-black px-2.5 py-1 rounded-lg">TỪ MỚI</span>
+                    <h2 class="text-base font-bold text-gray-800">Từ Ứng Dụng Đánh Vần</h2>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- dê -->
+                    <div onclick="speakText('Dờ ê dê - Con dê')" class="btn-cartoon bg-amber-50 border-3 border-amber-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🐐</span>
+                        <span class="text-2xl font-black text-amber-800">dê</span>
+                        <span class="text-[10px] font-semibold text-amber-600">d - ê - dê</span>
+                    </div>
+
+                    <!-- dế -->
+                    <div onclick="speakText('Dờ ê dê sắc dế - Con dế')" class="btn-cartoon bg-emerald-50 border-3 border-emerald-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🦗</span>
+                        <span class="text-2xl font-black text-emerald-800">dế</span>
+                        <span class="text-[10px] font-semibold text-emerald-600">d - ê - sắc - dế</span>
+                    </div>
+
+                    <!-- đỗ -->
+                    <div onclick="speakText('Đờ ô đô ngã đỗ - Hạt đỗ')" class="btn-cartoon bg-purple-50 border-3 border-purple-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🫘</span>
+                        <span class="text-2xl font-black text-purple-800">đỗ</span>
+                        <span class="text-[10px] font-semibold text-purple-600">đ - ô - ngã - đỗ</span>
+                    </div>
+
+                    <!-- đỏ -->
+                    <div onclick="speakText('Đờ o do hỏi đỏ - Màu đỏ')" class="btn-cartoon bg-rose-50 border-3 border-rose-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🔴</span>
+                        <span class="text-2xl font-black text-rose-700">đỏ</span>
+                        <span class="text-[10px] font-semibold text-rose-600">đ - o - hỏi - đỏ</span>
+                    </div>
+
+                    <!-- đò -->
+                    <div onclick="speakText('Đờ o do huyền đò - Con đò')" class="btn-cartoon bg-sky-50 border-3 border-sky-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🚣</span>
+                        <span class="text-2xl font-black text-sky-800">đò</span>
+                        <span class="text-[10px] font-semibold text-sky-600">đ - o - huyền - đò</span>
+                    </div>
+
+                    <!-- dã -->
+                    <div onclick="speakText('Dờ a da ngã dã')" class="btn-cartoon bg-orange-50 border-3 border-orange-300 rounded-2xl p-3 text-center shadow-cartoon-sm flex flex-col items-center">
+                        <span class="text-4xl mb-1">🏝️</span>
+                        <span class="text-2xl font-black text-orange-800">dã</span>
+                        <span class="text-[10px] font-semibold text-orange-600">d - a - ngã - dã</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 3: Câu Ứng Dụng Trang 34 -->
+            <div class="bg-white rounded-3xl p-4 border-4 border-yellow-300 shadow-cartoon">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="bg-amber-400 text-white text-xs font-black px-2.5 py-1 rounded-lg">CÂU ỨNG DỤNG</span>
+                    <h2 class="text-base font-bold text-gray-800">Luyện Đọc Câu Trang 34</h2>
+                </div>
+
+                <div class="space-y-3">
+                    <div onclick="speakText('Bé có ô đỏ')" class="btn-cartoon bg-gradient-to-r from-pink-50 to-rose-50 border-3 border-pink-300 rounded-2xl p-3.5 flex items-center justify-between shadow-cartoon-sm cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="text-4xl">☂️</span>
+                            <div>
+                                <div class="text-lg font-black text-pink-700">"Bé có ô đỏ."</div>
+                                <p class="text-[11px] font-bold text-gray-500">Chạm để nghe đọc câu mẫu</p>
+                            </div>
+                        </div>
+                        <button class="w-9 h-9 bg-pink-500 text-white rounded-xl flex items-center justify-center shadow-cartoon-sm">
+                            <i class="fa-solid fa-volume-high text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div onclick="speakText('Bờ hồ có đò')" class="btn-cartoon bg-gradient-to-r from-blue-50 to-sky-50 border-3 border-blue-300 rounded-2xl p-3.5 flex items-center justify-between shadow-cartoon-sm cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="text-4xl">🌊</span>
+                            <div>
+                                <div class="text-lg font-black text-blue-700">"Bờ hồ có đò."</div>
+                                <p class="text-[11px] font-bold text-gray-500">Chạm để nghe đọc câu mẫu</p>
+                            </div>
+                        </div>
+                        <button class="w-9 h-9 bg-blue-500 text-white rounded-xl flex items-center justify-center shadow-cartoon-sm">
+                            <i class="fa-solid fa-volume-high text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 2: TRÒ CHƠI LUYỆN TẬP TƯƠNG TÁC -->
+        <section id="tab-quiz" class="hidden space-y-4">
+            <div class="bg-white rounded-3xl p-4 border-4 border-amber-300 shadow-cartoon text-center">
+                
+                <div class="flex items-center justify-between mb-2">
+                    <span id="quiz-progress" class="bg-amber-100 text-amber-800 font-black px-3 py-1 rounded-xl text-xs border border-amber-300">
+                        Câu 1 / 5
+                    </span>
+                    <button onclick="playQuizPromptSound()" class="btn-cartoon bg-amber-400 hover:bg-amber-500 text-white font-bold px-3 py-1.5 rounded-xl border-2 border-white shadow-cartoon-sm flex items-center gap-1.5 text-xs">
+                        <i class="fa-solid fa-volume-high"></i> Nghe lại câu hỏi
+                    </button>
+                </div>
+
+                <div class="my-3 flex flex-col items-center">
+                    <div class="w-16 h-16 bg-pink-100 border-3 border-brandPink rounded-full flex items-center justify-center text-3xl shadow-cartoon animate-bounce-fun mb-2">
+                        🦄
+                    </div>
+                    <h3 id="quiz-prompt-text" class="text-lg font-black text-gray-800 px-1 leading-snug">
+                        Đang tải câu hỏi...
+                    </h3>
+                </div>
+
+                <div id="quiz-options-grid" class="grid grid-cols-2 gap-3 mt-3">
+                    <!-- Dynamic Answer Buttons -->
+                </div>
+
+                <div id="quiz-feedback-box" class="mt-4 min-h-[3.5rem] flex items-center justify-center text-center font-black text-base px-2">
+                    <!-- Praise Animation Message -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 3: BÀI KIỂM TRA ĐẠT ĐIỂM ĐỂ MỞ KHÓA -->
+        <section id="tab-test" class="hidden space-y-4">
+            <div class="bg-white rounded-3xl p-4 border-4 border-purple-300 shadow-cartoon text-center">
+                
+                <div class="bg-purple-100 rounded-2xl p-3 border-2 border-purple-200 mb-3">
+                    <h3 class="text-base font-black text-brandPurple">🏆 Thử Thách Kiểm Tra Tốt Nghiệp Trang 34</h3>
+                    <p class="text-xs font-semibold text-gray-600 mt-0.5">Bé Ngọc Bích hoàn thành đúng hết các câu hỏi để được mở khóa tốt nghiệp nhé!</p>
+                </div>
+
+                <div id="test-content-area" class="space-y-4">
+                    <div id="test-q-box" class="bg-pink-50 rounded-2xl p-4 border-3 border-pink-300">
+                        <span id="test-step-badge" class="bg-pink-500 text-white text-xs font-black px-2.5 py-1 rounded-lg">CÂU 1</span>
+                        <h4 id="test-question-text" class="text-lg font-black text-gray-800 my-3">...</h4>
+                        <div id="test-options-container" class="grid grid-cols-2 gap-3"></div>
+                    </div>
+                </div>
+
+                <div id="test-feedback" class="min-h-[3rem] font-black text-brandPink text-base flex items-center justify-center"></div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- App Logic Script -->
+    <script>
+        // --- Parent Lock Configuration ---
+        const PARENT_PASSWORD = "6523008";
+
+        function openParentLockModal() {
+            document.getElementById('lock-pass-input').value = '';
+            document.getElementById('lock-error-msg').innerText = '';
+            document.getElementById('parent-lock-modal').classList.remove('hidden');
+        }
+
+        function closeParentLockModal() {
+            document.getElementById('parent-lock-modal').classList.add('hidden');
+        }
+
+        function verifyParentPassword() {
+            const input = document.getElementById('lock-pass-input').value.trim();
+            if (input === PARENT_PASSWORD) {
+                closeParentLockModal();
+                alert("Mở khóa phụ huynh thành công! Chúc bé Ngọc Bích học tốt!");
+                speakText("Mở khóa phụ huynh thành công!");
+            } else {
+                document.getElementById('lock-error-msg').innerText = "Mật khẩu phụ huynh không đúng!";
+                playWrongSound();
+                speakText("Mật khẩu phụ huynh không đúng!");
+            }
+        }
+
+        // Prevent accidental back button / exit
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, null, window.location.href);
+            openParentLockModal();
+        };
+
+        window.onbeforeunload = function () {
+            return "Bé Ngọc Bích đang học bài, phụ huynh có chắc muốn thoát không?";
+        };
+
+        // --- Personalized Praise List for Ngọc Bích ---
+        const praiseList = [
+            "Xuất sắc quá Ngọc Bích xinh gái ơi!",
+            "Ngọc Bích xinh gái giỏi quá!",
+            "Tuyệt vời Ngọc Bích xinh gái!",
+            "Chính xác rồi! Ngọc Bích thông minh quá!",
+            "Hoan hô Ngọc Bích xinh gái xuất sắc!"
+        ];
+
+        function getRandomPraise() {
+            return praiseList[Math.floor(Math.random() * praiseList.length)];
+        }
+
+        // --- Web Audio Sound FX ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSuccessSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.35); 
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+        }
+
+        function playWrongSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(240, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // --- Vietnamese Speech Synthesis ---
+        function speakText(text, onEndCallback = null) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.85; 
+                utterance.pitch = 1.15;
+                if (onEndCallback) {
+                    utterance.onend = onEndCallback;
+                }
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- Navigation Logic ---
+        let stars = 0;
+
+        function switchTab(tab) {
+            document.getElementById('tab-learn').classList.add('hidden');
+            document.getElementById('tab-quiz').classList.add('hidden');
+            document.getElementById('tab-test').classList.add('hidden');
+
+            const btnLearn = document.getElementById('tab-learn-btn');
+            const btnQuiz = document.getElementById('tab-quiz-btn');
+            const btnTest = document.getElementById('tab-test-btn');
+
+            btnLearn.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 text-gray-600";
+            btnQuiz.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 text-gray-600";
+            btnTest.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 text-gray-600";
+
+            if (tab === 'learn') {
+                document.getElementById('tab-learn').classList.remove('hidden');
+                btnLearn.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 bg-brandPink text-white shadow-cartoon-sm";
+            } else if (tab === 'quiz') {
+                document.getElementById('tab-quiz').classList.remove('hidden');
+                btnQuiz.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 bg-amber-400 text-white shadow-cartoon-sm";
+                loadQuizQuestion();
+            } else if (tab === 'test') {
+                document.getElementById('tab-test').classList.remove('hidden');
+                btnTest.className = "btn-cartoon flex-1 py-2 rounded-xl text-sm font-bold flex flex-col items-center justify-center gap-0.5 bg-purple-500 text-white shadow-cartoon-sm";
+                loadTestQuestion();
+            }
+        }
+
+        // --- TAB 2: Quiz Data (Trang 34) ---
+        let currentQuizIndex = 0;
+        const quizQuestions = [
+            {
+                prompt: "Ngọc Bích hãy chọn tiếng 'dê' (con dê) nhé!",
+                speakPrompt: "Ngọc Bích hãy tìm tiếng dê nhé!",
+                options: [
+                    { label: "🐐 dê", correct: true },
+                    { label: "🦗 dế", correct: false },
+                    { label: "🫘 đỗ", correct: false },
+                    { label: "🔴 đỏ", correct: false }
+                ]
+            },
+            {
+                prompt: "Đâu là chữ 'đ' (đờ) vậy Ngọc Bích xinh gái?",
+                speakPrompt: "Đâu là chữ đờ vậy Ngọc Bích xinh gái?",
+                options: [
+                    { label: "chữ d", correct: false },
+                    { label: "chữ đ", correct: true },
+                    { label: "chữ c", correct: false },
+                    { label: "chữ o", correct: false }
+                ]
+            },
+            {
+                prompt: "Bé tìm tiếng 'đỗ' (hạt đỗ) giúp thỏ nhé!",
+                speakPrompt: "Bé hãy tìm tiếng đỗ nào!",
+                options: [
+                    { label: "🐐 dê", correct: false },
+                    { label: "🫘 đỗ", correct: true },
+                    { label: "🚣 đò", correct: false },
+                    { label: "🦗 dế", correct: false }
+                ]
+            },
+            {
+                prompt: "Đâu là câu 'Bé có ô đỏ'?",
+                speakPrompt: "Ngọc Bích chọn câu Bé có ô đỏ nhé!",
+                options: [
+                    { label: "Bé có ô đỏ", correct: true },
+                    { label: "Bờ hồ có đò", correct: false },
+                    { label: "Cò ở bờ hồ", correct: false },
+                    { label: "Bé có cá đỏ", correct: false }
+                ]
+            },
+            {
+                prompt: "Bé tìm từ 'đò' (con đò trên sông) nhé!",
+                speakPrompt: "Ngọc Bích tìm từ đò nào!",
+                options: [
+                    { label: "🔴 đỏ", correct: false },
+                    { label: "🚣 đò", correct: true },
+                    { label: "🐐 dê", correct: false },
+                    { label: "🏝️ dã", correct: false }
+                ]
+            }
+        ];
+
+        function playQuizPromptSound() {
+            speakText(quizQuestions[currentQuizIndex].speakPrompt);
+        }
+
+        function loadQuizQuestion() {
+            const q = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `Câu ${currentQuizIndex + 1} / ${quizQuestions.length}`;
+            document.getElementById('quiz-prompt-text').innerText = q.prompt;
+            document.getElementById('quiz-feedback-box').innerHTML = '';
+
+            const grid = document.getElementById('quiz-options-grid');
+            grid.innerHTML = '';
+
+            playQuizPromptSound();
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-cartoon bg-gradient-to-b from-amber-50 to-amber-100 hover:from-amber-100 border-3 border-amber-300 font-extrabold text-amber-900 py-3 px-2 rounded-2xl shadow-cartoon text-base flex items-center justify-center';
+                btn.innerText = opt.label;
+                btn.onclick = () => checkQuizAnswer(opt);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(option) {
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            if (option.correct) {
+                playSuccessSound();
+                stars += 10;
+                document.getElementById('star-count').innerText = stars;
+
+                const praiseMsg = getRandomPraise();
+                feedbackBox.innerHTML = `<span class="text-pink-600 font-black text-lg animate-bounce-fun">${praiseMsg} 🎉 +10 ⭐</span>`;
+                speakText(praiseMsg);
+
+                confetti({
+                    particleCount: 75,
+                    spread: 60,
+                    origin: { y: 0.65 }
+                });
+
+                setTimeout(() => {
+                    currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
+                    loadQuizQuestion();
+                }, 2400);
+            } else {
+                playWrongSound();
+                feedbackBox.innerHTML = `<span class="text-rose-500 font-bold">Thử lại nhé Ngọc Bích xinh gái! 💖</span>`;
+                speakText("Thử chọn lại lần nữa xem nào Ngọc Bích ơi!");
+            }
+        }
+
+        // --- TAB 3: Test Graduation Data ---
+        let currentTestIndex = 0;
+        const testQuestions = [
+            {
+                q: "1. Đâu là chữ 'd' (dờ)?",
+                speak: "Đâu là chữ dờ?",
+                options: ["Chữ d", "Chữ đ", "Chữ a"],
+                ans: 0
+            },
+            {
+                q: "2. Chọn từ có nghĩa là 'con dế' 🦗",
+                speak: "Chọn từ con dế",
+                options: ["dê", "dế", "đỗ"],
+                ans: 1
+            },
+            {
+                q: "3. Hoàn thành câu: 'Bờ hồ có ...'",
+                speak: "Bờ hồ có gì nào?",
+                options: ["đò", "dê", "ô đỏ"],
+                ans: 0
+            }
+        ];
+
+        function loadTestQuestion() {
+            const q = testQuestions[currentTestIndex];
+            document.getElementById('test-step-badge').innerText = `CÂU ${currentTestIndex + 1} / ${testQuestions.length}`;
+            document.getElementById('test-question-text').innerText = q.q;
+            document.getElementById('test-feedback').innerText = '';
+
+            speakText(q.speak);
+
+            const container = document.getElementById('test-options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-cartoon bg-purple-100 hover:bg-purple-200 border-3 border-purple-300 font-black text-purple-900 py-3.5 px-2 rounded-2xl shadow-cartoon text-base';
+                btn.innerText = optText;
+                btn.onclick = () => checkTestAnswer(idx, q.ans);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkTestAnswer(selectedIdx, correctIdx) {
+            const feedback = document.getElementById('test-feedback');
+            if (selectedIdx === correctIdx) {
+                playSuccessSound();
+                stars += 15;
+                document.getElementById('star-count').innerText = stars;
+
+                if (currentTestIndex < testQuestions.length - 1) {
+                    feedback.innerHTML = `<span class="text-emerald-600 font-black">Chính xác! Ngọc Bích xuất sắc quá! 🎉</span>`;
+                    speakText("Chính xác! Ngọc Bích xuất sắc quá!");
+                    setTimeout(() => {
+                        currentTestIndex++;
+                        loadTestQuestion();
+                    }, 2000);
+                } else {
+                    // Graduated!
+                    confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 } });
+                    feedback.innerHTML = `<span class="text-pink-600 font-black text-lg">🏆 CHÚC MỪNG NGỌC BÍCH XINH GÁI HOÀN THÀNH XUẤT SẮC BÀI 34!</span>`;
+                    speakText("Chúc mừng Ngọc Bích xinh gái đã hoàn thành xuất sắc bài học trang 34!");
+                }
+            } else {
+                playWrongSound();
+                feedback.innerHTML = `<span class="text-red-500 font-bold">Chưa đúng rồi, Ngọc Bích chọn lại nhé!</span>`;
+                speakText("Chưa đúng rồi, Ngọc Bích chọn lại nhé!");
+            }
+        }
+
+        // Initialize App
+        window.onload = function() {
+            switchTab('learn');
+        };
+    </script>
+</body>
+</html>
